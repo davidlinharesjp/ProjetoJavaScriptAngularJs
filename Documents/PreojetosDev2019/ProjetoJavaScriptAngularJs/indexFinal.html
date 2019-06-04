@@ -1,0 +1,194 @@
+<html lang="pt-BR" ng-app="listaCadastro">
+
+<head>
+    <meta charset="utf-8">
+    <title>Cadastro Clientes</title>
+    <link rel="stylesheet" type="text/css" href="bootstrap.css" />
+    <style>
+        .jumbotron {
+            width: 1000px;
+            text-align: center;
+            margin-top: 20px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        h3 {
+            margin-bottom: 30px;
+        }
+        
+        .table {
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .form-control {
+            margin-bottom: 5px;
+        }
+        
+        hr {
+            border-color: #999;
+        }
+        
+        body {
+            background-color: rgb(68, 68, 223);
+        }
+        
+        .button {
+            size: 10pt;
+            background-color: red;
+            color: black;
+        }
+    </style>
+
+    <script src="angular.js"></script>
+    <script>
+        angular.module("listaCadastro", []);
+        angular.module("listaCadastro").controller("listaCadastroCtrl", function($scope) {
+            $scope.app = "Cadastro Clientes";
+            $scope.classe = "selecionado";
+            $scope.cadastro = {};
+            $scope.flagSalvar = false;
+
+            $scope.cadastros = [
+                {
+                    nome: "Fabio",
+                    telefone: "0001",
+                    endereco: "Rua 01",
+                    cpf: "1111",
+                    email: "email@1",
+                    bairro: "Bairro",
+                    estado: "Paraiba",
+                    complemento: "Casa",
+                    numero: "010101",
+                    logradouro: "Log"
+                },
+                {
+                    nome: "ABC",
+                    telefone: "0001",
+                    endereco: "Rua 01",
+                    cpf: "1111",
+                    email: "email@1",
+                    bairro: "Bairro",
+                    estado: "Paraiba",
+                    complemento: "Casa",
+                    numero: "010101",
+                    logradouro: "Log"
+                }
+            ];
+
+            $scope.cidades = [{
+                nome: "João Pessoa"
+            }, {
+                nome: "Santa Rita "
+            }, {
+                nome: "Campina Grande"
+            }, {
+                nome: "Bayeux"
+            }, {
+                nome: "Cabedelo"
+            }];
+
+              $scope.apagarCadastro = function(cadastros) {
+                $scope.cadastros = cadastros.filter(function(cadastro) {
+                    if (!cadastro.selecionado) return cadastro;
+                });
+
+            };
+
+            
+            $scope.adicionarCadastro = function(cadastro) {
+                $scope.flagSalvar = true;
+                $scope.cadastros.push(angular.copy(cadastro));
+                delete $scope.cadastro;
+                $scope.contatoForm.$setPristine();
+            };
+
+            $scope.editarCadastro = function() { 
+                var i;
+                for (i = 0; i < $scope.cadastros.length; i++) {
+                    if ($scope.cadastros[i].selecionado == true) {
+                        $scope.cadastro = $scope.cadastros[i];
+                        $scope.flagSalvar = true;
+                        break;
+                    }
+                }
+            };
+
+            $scope.salvarCadastro = function(){
+             var i;
+                for (i = 0; i < $scope.cadastros.length; i++) {
+                    if ($scope.cadastros[i].selecionado == true) {
+                        $scope.flagSalvar = false;
+                        break;
+                    }
+                }
+                console.log(i);
+                $scope.cadastros[i] =  $scope.cadastro; debugger
+                delete $scope.cadastro;
+            }
+
+        });
+    </script>
+</head>
+
+<body ng-controller="listaCadastroCtrl">
+    <div class="jumbotron">
+        <h3>{{app}}</h3>
+
+        <table class="table table-striped" ng-show="cadastros.length > 0">
+            <tr>
+                <th></th>
+                <th>Nome: </th>
+                <th>CPF/CNPJ: </th>
+                <th>CEP: </th>
+                <th>Bairro: </th>
+                <th>Cidade: </th>
+                <th>Estado: </th>
+                <th>Logradouro: </th>
+                <th>Numero: </th>
+                <th>Complemento: </th>
+            </tr>
+            <tr ng-classe="selecionado" ng-repeat="cadastro in cadastros">
+                <td><input type="checkbox" ng-model="cadastro.selecionado"/> </td>
+                <td>{{cadastro.nome}} </td>
+                <td>{{cadastro.cpf}} </td>
+                <td>{{cadastro.cep}} </td>
+                <td>{{cadastro.bairro}} </td>
+                <td>{{cadastro.cidade.nome}} </td>
+                <td>{{cadastro.estado}} </td>
+                <td>{{cadastro.logradouro}}</td>
+                <td>{{cadastro.numero}} </td>
+                <td>{{cadastro.complemento}}</td>
+            </tr>
+
+        </table>
+        </hr>
+       
+        <section ng-show="flagSalvar == true" >
+        
+            <select class="form-control" type="text" ng-model="cadastro.cidade" ng-options="cidade.nome for cidade in  cidades ">
+    			    <option  value=""> Selecione a cidade</option>
+    		</select>
+            <input class="form-control" type="text" ng-model="cadastro.nome" placeholder="Nome" ng-required="true" />
+            <input class="form-control" type="text" ng-model="cadastro.cpf" placeholder="CPF/CNPJ" />
+            <input class="form-control" type="text" ng-model="cadastro.email" placeholder="Endereço" />
+            <input class="form-control" type="text" ng-model="cadastro.telefone" placeholder="Tefelone" />
+            <input class="form-control" type="text" ng-model="cadastro.cep" placeholder="Cep" />
+            <input class="form-control" type="text" ng-model="cadastro.bairro" placeholder="Bairro" />
+            <input class="form-control" type="text" ng-model="cadastro.estado" placeholder="Estados"/>
+            <input class="form-control" type="text" ng-model="cadastro.logradouro" placeholder="Logradouro" />
+            <input class="form-control" type="text" ng-model="cadastro.numero" placeholder="Numero" />
+            <input class="form-control" type="text" ng-model="cadastro.complemento" placeholder="Complemento" />
+        </section>
+
+        <button class="btn btn-primary btn-block" ng-click="adicionarCadastro(cadastro)" ng-show="!flagSalvar" >Cadastrar Cliente</button>
+        <button class="btn btn-primary btn-block" ng-click="adicionarCadastro(cadastro)" ng-show="flagSalvar" ng-disabled=" !cadastro.nome || !cadastro.cidade || !cadastro.cpf || !cadastro.telefone">Salvar Cadastro</button>
+        <button class="btn btn-primary btn-block " ng-click="apagarCadastro(cadastros) " >Apagar Contatos</button>
+        <button class="btn btn-primary btn-block " ng-click="editarCadastro()"  ng-show="!flagSalvar" >Editar Cadastro</button>
+        <button class="btn btn-primary btn-block " ng-click="salvarCadastro()" ng-show="flagSalvar" >Salvar</button>
+    </div>
+
+</body>
+
+</html>
